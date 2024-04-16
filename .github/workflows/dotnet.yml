@@ -17,16 +17,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Debug info
+      run: |
+        pwd
+        ls -al
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '8.x'
+        dotnet-version: '8.x' # Ваша версия .NET
 
     - name: Restore dependencies
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --no-restore -c Release-no-db
 
     - name: Test
       run: dotnet test --no-restore --verbosity normal
