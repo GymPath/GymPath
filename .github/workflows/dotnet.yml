@@ -3,10 +3,10 @@ name: .NET Workflow
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '8.x' # Обновленная версия .NET
+        dotnet-version: '8.x'
 
     - name: Restore dependencies
       run: dotnet restore
@@ -30,31 +30,3 @@ jobs:
 
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-
-  deploy:
-    name: Deploy to Azure
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.x'
-
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Publish to Azure
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'GymPath' 
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
